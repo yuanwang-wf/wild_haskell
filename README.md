@@ -1,4 +1,4 @@
-# Learning Haskell in Wild
+# Haskell in Wild
 
 
 
