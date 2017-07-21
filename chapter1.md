@@ -4,51 +4,63 @@
 
 [https://docs.haskellstack.org/en/stable/README/](https://docs.haskellstack.org/en/stable/README/)
 
-
-
-## Editor Intgration 
+## Editor Integration
 
 ### Atom
 
+### Emacs
 
+[intero](https://commercialhaskell.github.io/intero/)
 
-\[Emacs\]\(https://commercialhaskell.github.io/intero/\)
-
-
-
-\#\# VScode with haskell-ide-engine
+### VScode with haskell-ide-engine
 
 Haskell Syntax Highlight
 
-https://github.com/haskell/haskell-ide-engine
-
-
+[haskell-ide-engine](https://github.com/haskell/haskell-ide-engine)
 
 Install on MacOS
 
+```bash
 brew install icu4c && brew link icu4c --force
-
-
-
-\`\`\`bash
-
 stack install text-icu --extra-lib-dirs=/usr/local/opt/icu4c/lib --extra-include-dirs=/usr/local/opt/icu4c/include
+```
 
-\`\`\`
-
-
-
-\`\`\`bash
-
+```bash
 git clone https://github.com/haskell/haskell-ide-engine
-
-stack install
-
-\`\`\`
-
-
 
 stack install hoogle
 
 hoogle generate
+stack install
+```
 
+## Your first haskell program
+
+```bash
+stack new guessNumber simple
+```
+
+```haskell
+module Main where
+
+import           Control.Monad
+import           Data.Ord      (compare)
+import           System.IO     (readLn)
+import           System.Random (randomRIO)
+
+
+guess :: Int -> IO ()
+guess secretNumber = do
+    print "guess a number"
+    guessNumber <- readLn :: IO Int
+    case compare guessNumber secretNumber of
+        LT -> (print "Too Small!") >> (guess secretNumber)
+        EQ -> print "You Win!"
+        GT -> (print "Too big!") >> (guess secretNumber)
+
+
+main :: IO ()
+main = do
+    secretNumber <- randomRIO (0, 100) :: IO Int
+    guess secretNumber
+```
