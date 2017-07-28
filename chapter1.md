@@ -4,6 +4,10 @@
 
 [https://docs.haskellstack.org/en/stable/README/](https://docs.haskellstack.org/en/stable/README/)
 
+make sure `stack version` outputs latest stack version, currently `Version 1.5.0`.
+
+`stack upgrade`
+
 ## Editor Integration
 
 ### Atom
@@ -32,6 +36,14 @@ stack install hoogle
 
 hoogle generate
 stack install
+```
+
+## Stack
+
+```bash
+stack version
+
+stack upgrade
 ```
 
 ## Your first haskell program
