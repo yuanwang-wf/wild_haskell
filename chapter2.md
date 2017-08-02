@@ -1,6 +1,12 @@
-# Two things we need to master
+# Second Program: Upload Spreadsheet to google bigquery
 
-## Monad
+In this chapter, we are going to write a command line program to upload a spreadsheet file's content to Google BigQuery. There is awesome library Gogol provides Haskell binding to Google API.
+
+```bash
+stack new xlsx-bg simple
+```
+
+We need gogol 0.3.0 or higher, Make sure your project's resolver version is lts-9.0 or later. You can verify it by doing `stack list-dependencies`.
 
 ## Lens
 
@@ -33,3 +39,9 @@ makeSegment start end = Segment (makePoint start) (makePoint end)
 updateSegment :: Segment -> Segment
 updateSegment = (segmentStart .~ makePoint (10, 10)) . (segmentEnd .~ makePoint (10, 10))
 ```
+
+## Catch Exception
+
+http://www.scs.stanford.edu/16wi-cs240h/slides/concurrency-slides.html#(1)
+
+Add exception handle in the guess number program

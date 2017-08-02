@@ -1,8 +1,6 @@
 # Haskell in Wild
 
-
-
-TODO
+Learning Haskell by throwing yourself into the wilderness
 
 
 
