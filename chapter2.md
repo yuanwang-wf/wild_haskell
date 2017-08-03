@@ -12,15 +12,22 @@ We need gogol 0.3.0 or higher, Make sure your project's resolver version is lts-
 
 So how to use Gogol library ? The lib provides an [example](https://github.com/brendanhay/gogol/blob/develop/examples/src/Example/Storage.hs) for Google Cloud Storage.
 
+Let's do a little change, so it fetch all the bigquery project the current default google credential has access to.
+
+You need to install gcloud, and setup default
+```bash
+gcloud init
+gcloud auth application-default login
+```
+
+and let's put the following code into our `Main.hs`. 
+
 ```haskell
 module Main where
 
 import Control.Lens                 ((&), (.~), (<&>), (?~))
-import Control.Monad.Trans.Resource (liftResourceT, runResourceT)
+import Control.Monad.Trans.Resource (runResourceT)
 import Control.Monad.IO.Class
-
-import Data.Conduit (($$+-))
-import Data.Text    (Text)
 
 import System.IO (stdout)
 import Network.Google.Auth   (Auth, Credentials (..), initStore)
@@ -46,9 +53,28 @@ example = do
  main = do
      projects <- example
      print projects
- ``` 
+```
 
-## Lens
+You need add following build depends to make stack build successed.
+
+```yaml
+  build-depends:       base >= 4.7 && < 5
+                     , bytestring
+                     , conduit
+                     , conduit-extra
+                     , gogol
+                     , gogol-bigquery
+                     , gogol-core
+                     , http-conduit
+                     , lens
+                     , resourcet
+```
+
+Quite few things need to unpack here.
+
+## Create a bigquery dataset
+
+### Crash Course for Lens
 
 ```haskell
 {-# LANGUAGE RankNTypes      #-}
@@ -84,4 +110,6 @@ updateSegment = (segmentStart .~ makePoint (10, 10)) . (segmentEnd .~ makePoint 
 
 http://www.scs.stanford.edu/16wi-cs240h/slides/concurrency-slides.html#(1)
 
-Add exception handle in the guess number program
+[catchJust](https://hackage.haskell.org/package/base-4.10.0.0/docs/Control-Exception.html#v:catchJust)
+
+TODO: Add exception handle in the guess number program
