@@ -4,7 +4,7 @@
 
 [https://docs.haskellstack.org/en/stable/README/](https://docs.haskellstack.org/en/stable/README/)
 
-make sure `stack version` outputs latest stack version, currently `Version 1.5.0`.
+make sure `stack --version` outputs latest stack version, currently `Version 1.6.5`.
 
 `stack upgrade`
 
