@@ -7,7 +7,7 @@ import Web.Spock.Config
 type Server a = SpockM () () () a
 
 app :: Server ()
-app = get root (text "Hello!")
+app = get root (html "<h1>Hello!</h1>")
 
 main :: IO ()
 main = do

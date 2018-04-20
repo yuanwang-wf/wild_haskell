@@ -22,16 +22,20 @@ Haskell Syntax Highlight
 
 [haskell-ide-engine](https://github.com/haskell/haskell-ide-engine)
 
-Install on MacOS
+Install on MacOS, you need to install `icu4c` on your machine.
+```
+git clone https://github.com/haskell/haskell-ide-engine
+cd haskell-ide-engine
+make
+```
 
+Old way
 ```bash
 brew install icu4c && brew link icu4c --force
 stack install text-icu --extra-lib-dirs=/usr/local/opt/icu4c/lib --extra-include-dirs=/usr/local/opt/icu4c/include
 ```
 
 ```bash
-git clone https://github.com/haskell/haskell-ide-engine
-
 stack install hoogle
 
 hoogle generate
