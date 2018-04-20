@@ -7,6 +7,8 @@
 module Tr
     ( CharSet
     , tr
+    , leftZip
+    , translates
     ) where
 
 -- | Just to give `tr` a more descriptive type
@@ -32,3 +34,21 @@ type CharSet = String
 -- the second argument being `Just ""`, we will not be testing this edge case.
 tr :: CharSet -> Maybe CharSet -> String -> String
 tr _inset _outset xs = xs
+
+
+leftZip :: [a] -> [b] -> [(a,b)]
+leftZip (x:xs) [y]    = (x, y) : leftZip xs [y]
+leftZip (x:xs) (y:ys) = (x, y) : leftZip xs ys
+leftZip [] _          = []
+leftZip (_:_) []      = []
+
+
+translate :: (Char, Char) -> String -> String
+translate (_in, _out) = map (fn _in _out)
+    where fn :: Char -> Char -> Char -> Char
+          fn  _in _out value = if _in == value then _out else value
+
+
+translates :: [(Char, Char)] -> String -> String
+translates pairs values = foldr translate values pairs
+
