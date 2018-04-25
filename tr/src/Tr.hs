@@ -4,6 +4,8 @@
 --
 -- PLEASE DON'T CHANGE THE INTERFACE OF THIS FILE AS WE WILL EXPECT IT TO BE
 -- THE SAME WHEN TESTING!
+
+
 module Tr
     ( CharSet
     , tr
@@ -11,8 +13,11 @@ module Tr
     , translates
     ) where
 
+import qualified Data.Map.Strict as Map
 -- | Just to give `tr` a more descriptive type
 type CharSet = String
+
+
 
 -- | 'tr' - the characters in the first argument are translated into characters
 -- in the second argument, where first character in the first CharSet is mapped
@@ -33,8 +38,9 @@ type CharSet = String
 -- It's up to you how to handle the first argument being the empty string, or
 -- the second argument being `Just ""`, we will not be testing this edge case.
 tr :: CharSet -> Maybe CharSet -> String -> String
-tr _inset _outset xs = xs
-
+tr _inset _outset xs = case _outset of
+    Just value -> translates (leftZip _inset value) xs
+    Nothing    -> xs
 
 leftZip :: [a] -> [b] -> [(a,b)]
 leftZip (x:xs) [y]    = (x, y) : leftZip xs [y]
@@ -43,12 +49,12 @@ leftZip [] _          = []
 leftZip (_:_) []      = []
 
 
-translate :: (Char, Char) -> String -> String
-translate (_in, _out) = map (fn _in _out)
-    where fn :: Char -> Char -> Char -> Char
-          fn  _in _out value = if _in == value then _out else value
+translate :: Map.Map Char Char -> Char -> Char
+translate charMap _in = case Map.lookup _in charMap of
+   Just value -> value
+   Nothing    -> _in
 
 
 translates :: [(Char, Char)] -> String -> String
-translates pairs values = foldr translate values pairs
+translates pairs = map (translate (Map.fromList pairs))
 
