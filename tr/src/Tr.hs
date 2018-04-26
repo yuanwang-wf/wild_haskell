@@ -9,11 +9,10 @@
 module Tr
     ( CharSet
     , tr
-    , leftZip
-    , translates
     ) where
 
 import qualified Data.Map.Strict as Map
+import Data.Maybe
 -- | Just to give `tr` a more descriptive type
 type CharSet = String
 
@@ -40,7 +39,7 @@ type CharSet = String
 tr :: CharSet -> Maybe CharSet -> String -> String
 tr _inset _outset xs = case _outset of
     Just value -> translates (leftZip _inset value) xs
-    Nothing    -> xs
+    Nothing    -> delete _inset xs
 
 leftZip :: [a] -> [b] -> [(a,b)]
 leftZip (x:xs) [y]    = (x, y) : leftZip xs [y]
@@ -58,3 +57,6 @@ translate charMap _in = case Map.lookup _in charMap of
 translates :: [(Char, Char)] -> String -> String
 translates pairs = map (translate (Map.fromList pairs))
 
+
+delete :: CharSet -> String -> String
+delete _inset = mapMaybe (\x -> if x `elem` _inset then Nothing else Just x )
