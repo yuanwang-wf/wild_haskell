@@ -1,6 +1,6 @@
-name:                notekeeper
+name:                parse-page
 version:             0.1.0.0
-github:              "githubuser/notekeeper"
+github:              "githubuser/parse-page"
 license:             BSD3
 author:              "Author name here"
 maintainer:          "example@example.com"
@@ -17,20 +17,20 @@ extra-source-files:
 # To avoid duplicated efforts in documentation and dealing with the
 # complications of embedding Haddock markup inside cabal files, it is
 # common to point users to the README.md file.
-description:         Please see the README on Github at <https://github.com/githubuser/notekeeper#readme>
+description:         Please see the README on Github at <https://github.com/githubuser/parse-page#readme>
 
 dependencies:
 - base >= 4.7 && < 5
-- lucid
-- Spock
-- Spock-lucid
+- http-conduit
+- html-conduit
 - text
+- xml-conduit
 
 library:
   source-dirs: src
 
 executables:
-  notekeeper-exe:
+  parse-page-exe:
     main:                Main.hs
     source-dirs:         app
     ghc-options:
@@ -38,10 +38,10 @@ executables:
     - -rtsopts
     - -with-rtsopts=-N
     dependencies:
-    - notekeeper
+    - parse-page
 
 tests:
-  notekeeper-test:
+  parse-page-test:
     main:                Spec.hs
     source-dirs:         test
     ghc-options:
@@ -49,4 +49,4 @@ tests:
     - -rtsopts
     - -with-rtsopts=-N
     dependencies:
-    - notekeeper
+    - parse-page
