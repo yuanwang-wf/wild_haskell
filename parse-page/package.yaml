@@ -42,7 +42,7 @@ executables:
 
 tests:
   parse-page-test:
-    main:                Spec.hs
+    main:                TastyLoader.hs
     source-dirs:         test
     ghc-options:
     - -threaded
@@ -50,3 +50,6 @@ tests:
     - -with-rtsopts=-N
     dependencies:
     - parse-page
+    - tasty
+    - tasty-hunit
+    - tasty-quickcheck
