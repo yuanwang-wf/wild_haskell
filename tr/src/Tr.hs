@@ -12,7 +12,7 @@ module Tr
     ) where
 
 import qualified Data.Map.Strict as Map
-import Data.Maybe
+import           Data.Maybe
 -- | Just to give `tr` a more descriptive type
 type CharSet = String
 
@@ -48,14 +48,12 @@ leftZip [] _          = []
 leftZip (_:_) []      = []
 
 
-translate :: Map.Map Char Char -> Char -> Char
-translate charMap _in = case Map.lookup _in charMap of
-   Just value -> value
-   Nothing    -> _in
-
-
 translates :: [(Char, Char)] -> String -> String
 translates pairs = map (translate (Map.fromList pairs))
+    where translate :: Map.Map Char Char -> Char -> Char
+          translate charMap _in = case Map.lookup _in charMap of
+            Just value -> value
+            Nothing    -> _in
 
 
 delete :: CharSet -> String -> String
