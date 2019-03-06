@@ -1,6 +1,3 @@
 # Haskell in Wild
 
-Learning Haskell by throwing yourself into the wilderness
-
-
-
+My terrible attempt to compile various source into a haskell book balances theory and partices.

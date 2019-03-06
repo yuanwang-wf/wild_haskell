@@ -1,3 +1,8 @@
+# Second Program `tr`
+
+In this chapter, we are going to work on the [lab1](http://www.scs.stanford.edu/16wi-cs240h/labs/lab1.html).
+
+
 # Third Program: Upload Spreadsheet to google bigquery
 
 In this chapter, we are going to write a command line program to upload a spreadsheet file's content to Google BigQuery. There is awesome library Gogol provides Haskell binding to Google API.

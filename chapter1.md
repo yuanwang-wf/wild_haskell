@@ -1,6 +1,9 @@
 # Install haskell and your first program Guess Number
 
-## Install Stack
+## Build Tools
+
+### Nix
+### Stack
 
 [https://docs.haskellstack.org/en/stable/README/](https://docs.haskellstack.org/en/stable/README/)
 
@@ -9,12 +12,6 @@ make sure `stack --version` outputs latest stack version, currently `Version 1.6
 `stack upgrade`
 
 ## Editor Integration
-
-### Atom
-
-### Emacs
-
-[intero](https://commercialhaskell.github.io/intero/)
 
 ### VScode with haskell-ide-engine
 
