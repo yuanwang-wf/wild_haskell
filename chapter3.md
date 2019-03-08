@@ -201,14 +201,15 @@ view _2 (1, 2, 3)
 
 
 ## References
-1. http://comonad.com/haskell/Lenses-Folds-and-Traversals-NYC.pdf
+1. https://skillsmatter.com/skillscasts/4251-lenses-compositional-data-access-and-manipulation (SPJ Lenses: compositional data access and manipulation)
+2. https://www.youtube.com/watch?v=cefnmjtAolY (Edward Kmett's NYC Haskell Meetup talk)
+3. http://comonad.com/haskell/Lenses-Folds-and-Traversals-NYC.pdf (Edward Kmett's NYC Haskell Meetup talk slide )
 2. http://hackage.haskell.org/package/lens-tutorial-1.0.3/docs/Control-Lens-Tutorial.html
-3. https://www.youtube.com/watch?v=H01dw-BMmlE&feature=youtu.be
+3. https://www.youtube.com/watch?v=H01dw-BMmlE
 4. https://www.youtube.com/watch?v=QZy4Yml3LTY
 5. https://www.youtube.com/watch?v=T88TDS7L5DY
 6. http://lens.github.io/tutorial.html
 7. https://www.reddit.com/r/haskell/comments/9ded97/is_learning_how_to_use_the_lens_library_worth_it/e5hf9ai/
-8. https://skillsmatter.com/skillscasts/4251-lenses-compositional-data-access-and-manipulation
 9. https://blog.jle.im/entry/lenses-products-prisms-sums.html
 
 
