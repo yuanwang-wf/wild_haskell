@@ -5,7 +5,7 @@ Lenses, Folds, and Traversals
 What is a Lens ?
 Lenses address some part of a “structure” that always exists, either look that part, or set that part.
 “structure” can be a computation result, for example, the hour in time. Functional setter and getter.
-## Evolution of Lens
+##  Data.Lens
 
 ```haskell
 data Lens s a = Lens { set  :: s -> a -> a
@@ -38,6 +38,8 @@ https://stackoverflow.com/questions/8766246/what-is-the-store-comonad
 
 Lens can form a category
 
+## Semantic Editor Combinator
+
 The Power is in the dot
 ```haskell
 (.)         :: (b -> c) -> (a -> c) -> (a -> c)
@@ -45,6 +47,64 @@ The Power is in the dot
 (.).(.).(.) :: (b -> c) -> (a1 -> a2 -> a3 -> b) -> a1 -> a2 -> a3 -> c
 ```
 [Detail Explantation](https://www.reddit.com/r/haskellquestions/comments/ayi445/help_me_understand_the_function_and_its_type/)
+
+`(.) :: (b -> c) -> (a -> b) -> a -> c`
+`f . g = \ t -> f (g t)`
+
+`((.).(.)) (+1) (+) 10 10 = 21`
+```
+   ((.).(.)) (+1) (+) 10 10
+=  (.)((.) (+1)) (+) 10 10
+=  ((.) (+1)) (+ 10) 10
+= ((+1). (+10)) 10
+= (+1) ((+10) 10)
+= (+1) (10 + 10)
+= 21
+```
+
+
+`(.).(.) :: (b -> c) -> (a -> b) -> a -> c`
+`dotF . dotG :: (b -> c) -> (a -> c) -> a -> c`
+`dotF :: b -> c`
+`dotG :: a -> b`
+
+since `dotF` is just an alias to `(.)`
+`dotF :: (u -> v) -> (s -> u) -> s -> v`
+`(u -> v) -> (s -> u) -> s -> v === b -> c`
+therefore
+`b === (u -> v)`
+`c === (s -> u) -> s -> v`
+
+`dotG` is also an alias to `(.)`
+`dotG :: (y -> z) -> (x -> y) -> x -> z`
+`(y -> z) -> (x -> y) -> x -> z === a -> b`
+therefore
+`a === (y -> z)`
+`b === (x -> y) -> x -> z`
+
+since `b` appears on both side
+
+```
+a === y -> z
+b === (u -> v)
+b === (x -> y) -> x -> z
+c === (s -> u) -> s -> v
+```
+
+we can deduct
+
+```
+u === x -> y
+v === x -> z
+```
+
+therefore `c === (s -> x -> y) -> s -> x -> z`
+
+`(.).(.) === a -> c`
+`(.).(.) === (y -> z) -> (s -> x -> y) -> s -> x - z`
+
+
+
 we can generalize this to any functor
 
 ```haskell
@@ -58,11 +118,10 @@ Semantic Editor Combinator
 
 `type SEC s t a b = (a -> b) -> s -> t`
 it like a functor (a -> b) -> f a -> f b
-fmap is Semantic Editor Combinator
-fmap . fmap is also a SEC
+`fmap` is Semantic Editor Combinator
+`fmap . fmap` is also a SEC
 
-so we use s to generalize f a,  f (g a), f (g (h a))
-  and t to generalize f b,  f (g b), f (g (h b)).
+so we use `s` to generalize `f a`,  `f (g a)`, `f (g (h a))` and `t` to generalize `f b`,  `f (g b)`, `f (g (h b))`.
 It may seems counterintuitive at first, we lost the relation between a and s, b and t.
 Functor is a semantic Editor Combinator
 `fmap :: Functor f => SEC (f a) (f b) a b`
@@ -93,7 +152,7 @@ fmapDefault :: forall t a b. Traverable t => (a -> b) -> t a -> t b
 fmapDefault f = runIndentity . traverse (Identity . f)
 ```
 
-build fmap out from traverse
+build `fmap` out from traverse
 we can change `fmapDefault`
 
 ```haskell
