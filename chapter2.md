@@ -1,6 +1,6 @@
 # Chapter 2 From State to Monad Transformers
 
-data61 has an amazing haskell course [fp-course](https://github.com/data61/fp-course). Brian McKenna has a serial of wonderful [videos](https://www.youtube.com/playlist?list=PLly9WMAVMrayYo2c-1E_rIRwBXG_FbLBW) walk through the course.
+data61 has an amazing Haskell course [fp-course](https://github.com/data61/fp-course). Brian McKenna has a serial of wonderful [videos](https://www.youtube.com/playlist?list=PLly9WMAVMrayYo2c-1E_rIRwBXG_FbLBW) walk through the course.
 
 This post aims to cover <em>State</em> course which is skipped in videos.
 
@@ -178,6 +178,22 @@ newtype StateEither s e a = StateEither
 ```
 
 Let's implement the functor instance of this typeP
+
+
+## mtl style typeclassess
+
+[MonadState](http://hackage.haskell.org/package/mtl-2.2.2/docs/Control-Monad-State-Lazy.html)
+
+```haskell
+class Monad m => MonadState s m | m -> s where
+    get :: m s
+    put :: s -> m ()
+```
+
+https://ocharles.org.uk/posts/2014-12-14-functional-dependencies.html
+
+
+http://hackage.haskell.org/package/unliftio
 
 
 ## References
