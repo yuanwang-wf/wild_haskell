@@ -4,4 +4,4 @@ import Exercise1
 import StateFold
 
 main :: IO ()
-main = runReaderT main' "Hello World"
+main = runReaderT main' "Welcome to mtl"

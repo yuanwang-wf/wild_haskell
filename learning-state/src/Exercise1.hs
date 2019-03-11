@@ -1,7 +1,3 @@
--- {-# LANGUAGE DeriveFunctor #-}
--- {-# LANGUAGE MultiParamTypeClasses #-}
--- {-# LANGUAGE FunctionalDependencies #-}
-
 module Exercise1 where
 
 import Control.Monad.Trans.Class
@@ -40,6 +36,6 @@ ask = ReaderT pure
 main' :: ReaderT String IO ()
 main' = do
     lift $ putStrLn "I'm going to tell you a message"
-    liftIO $ putStrLn "The message is:"
+    lift $ putStrLn "The message is:"
     message <- ask
     lift $ putStrLn message
