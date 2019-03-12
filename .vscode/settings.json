@@ -1,0 +1,22 @@
+{
+    "workbench.colorCustomizations": {
+        "activityBar.background": "#ab63be",
+        "activityBar.foreground": "#15202b",
+        "activityBar.inactiveForeground": "#15202b99",
+        "activityBarBadge.background": "#5a4f26",
+        "activityBarBadge.foreground": "#e7e7e7"
+    },
+    "latex-workshop.latex.recipes": [
+        {
+            "name": "pdflatex",
+            "command": "pdflatex",
+            "args": [
+                "--file-line-error",
+                "--synctex=1",
+                "--shell-escape",
+                "--interaction=nonstopmode"
+            ],
+            "env": {}
+        }
+    ]
+}
