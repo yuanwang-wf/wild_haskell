@@ -7,7 +7,7 @@
 
 1. figure out vscode latex custom compile command
 
-
+https://www.overleaf.com/learn/latex/Sections_and_chapters
 
 ## Reference
 https://tex.stackexchange.com/questions/279214/pygmentize-not-working-properly-with-minted-package-in-texshop-on-os-x
