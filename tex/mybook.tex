@@ -9,12 +9,13 @@
 \usepackage{graphicx}
 \usepackage{setspace}
 \usepackage{fancyhdr}\pagestyle{fancy}
+\usepackage{todonotes}
 \usepackage{xcolor}
 \usepackage{booktabs}
 \usepackage{hyperref}
 
 % Haskell code snippets and useful shortcuts
-\usepackage[cache=false]{minted}
+\usepackage[cache=true]{minted}
 \setminted[haskell]{escapeinside=@@}
 \newcommand{\hs}{\mintinline{haskell}}
 \newcommand{\cmd}[1]{\textsf{\color[rgb]{0,0,0.5} #1}}
@@ -27,6 +28,7 @@
 \newcommand{\blu}[1]{{\color[rgb]{0,0,1.0} #1}}
 
 \begin{document}
+\listoftodos
 \frontmatter
 \include{frontmatter/title}
 \tableofcontents

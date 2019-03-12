@@ -1,23 +1,21 @@
 %%%%
 \chapter{Install Haskell and your first program Guess Number}
 
- \section{Build Tools}
-
- Nix
- Stack
+\section{Build Tools}
+\subsection{Stack}
 
 \url{https://docs.haskellstack.org/en/stable/README/}
 
 make sure `stack --version` outputs latest stack version, currently `Version 1.6.5`.
 
 `stack upgrade`
-
- Editor Integration
+\todo{Add Nix and Cabal}
+\section{Editor Integration}
 
  VScode with haskell-ide-engine
 
 Haskell Syntax Highlight
-
+\subsection{Haskell IDE Engine}
 [haskell-ide-engine](https://github.com/haskell/haskell-ide-engine)
 
 Install on MacOS, you need to install `icu4c` on your machine.
@@ -43,9 +41,9 @@ stack version
 stack upgrade
 ```
 
- Your first haskell program
+\section{Your first haskell program}
 
-% \verb|stack new guessNumber simple|
+\verb|stack new guessNumber|
 
 \begin{minted}{haskell}
 module Main where

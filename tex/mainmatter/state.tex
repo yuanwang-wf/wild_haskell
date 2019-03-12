@@ -1,9 +1,7 @@
 %%%
 \chapter{From State to Monad Transformers}
 
-This post aims to cover <em>State</em> course which is skipped in videos.
-
-\section{Basics}
+\section{State Monad}
 
 First, let's look what is State.
 
@@ -47,7 +45,7 @@ We could also write `exec`
 `exec (State f) = P.snd . f`
 
 
- Basic Usage of State
+\subsection{Basic Usage of State}
 
 \begin{minted}{haskell}
 module Dice where
@@ -146,8 +144,8 @@ foldState f accum0 list0 =
     go x = modify' (\accum -> f accum x)
 \end{minted}
 
-
-Why we cannot compose any two monad
+\section{Monad Transformers}
+\subsection{Motivation} Why we cannot compose any two monad
 
 \begin{minted}{haskell}
 import Control.Applicative
@@ -169,7 +167,7 @@ instance (Monad f, Monad g) => Monad (Compose f g) where
 https://stackoverflow.com/questions/7040844/applicatives-compose-monads-dont
 
 
- Build a composed monad by hand
+\subsection{Build a composed monad by hand}
 
 
 \begin{minted}{haskell}
