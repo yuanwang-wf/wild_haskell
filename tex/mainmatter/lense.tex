@@ -9,13 +9,13 @@ Lenses address some part of a “structure” that always exists, either look th
   Data.Lens
 
 
-\begin{lstlisting}[language=haskell]
+\begin{minted}{haskell}
 data Lens s a = Lens { set  :: s -> a -> a
                      , view :: s -> a
                      }
 view :: Lens s a -> s -> a
 set  :: Lens s a -> s -> a -> s
-\end{lstlisting}
+\end{minted}
 
 view looks up an attribute a from s
 view is the getter, and set is the setter.
@@ -43,18 +43,18 @@ Lens can form a category
  Semantic Editor Combinator
 
 The Power is in the dot
-\begin{lstlisting}[language=haskell]
+\begin{minted}{haskell}
 (.)         :: (b -> c) -> (a -> c) -> (a -> c)
 (.).(.)     :: (b -> c) -> (a1 -> a2 -> b) -> a1 -> a2 -> c
 (.).(.).(.) :: (b -> c) -> (a1 -> a2 -> a3 -> b) -> a1 -> a2 -> a3 -> c
-\end{lstlisting}
+\end{minted}
 
 \href{https://www.reddit.com/r/haskellquestions/comments/ayi445/help_me_understand_the_function_and_its_type}{Detail Explantation}
 
-\begin{lstlisting}[language=haskell]
+\begin{minted}{haskell}
 (.) :: (b -> c) -> (a -> b) -> a -> c
 f . g = \ t -> f (g t)
-\end{lstlisting}
+\end{minted}
 
 
 `((.).(.)) (+1) (+) 10 10 = 21`
@@ -113,11 +113,11 @@ therefore `c === (s -> x -> y) -> s -> x -> z`
 
 we can generalize this to any functor
 
-\begin{lstlisting}[language=haskell]
+\begin{minted}{haskell}
 fmap                :: Functor f  => (a -> b) -> f a -> f b
 fmap . fmap         :: ( Functor f, Functor g)   => (a -> b) -> f (g a) -> f (g b)
 fmap . fmap . fmap  :: (Functor f, Functor g, Functor h) => (a -> b) -> f (g (h a)) -> f (g (h b))
-\end{lstlisting}
+\end{minted}
 
 it means we compose a function under arbitrary level deep nested context
 Semantic Editor Combinator
@@ -161,12 +161,12 @@ fmapDefault f = runIndentity . traverse (Identity . f)
 build `fmap` out from traverse
 we can change `fmapDefault`
 
-\begin{lstlisting}[language=haskell]
+\begin{minted}{haskell}
 over l f = runIdentity . l (Identity . f)
 over traverse f = runIdentity . traverse (Identity . f)
                 = fmapDefault f
                 = fmap f
-\end{lstlisting}
+\end{minted}
 
 type of `over :: ((a -> Identity b) -> s -> Identity t) -> (a -> b) -> s -> t`
 type Setter s t a b = (a -> Identity b) -> s -> Identity t
@@ -174,22 +174,22 @@ so we could rewrite `over` as
 over :: Setter s t a b -> (a -> b) -> s -> t
 let’s apply setter
 
-\begin{lstlisting}[language=haskell]
+\begin{minted}{haskell}
 mapped :: Functor f => Setter (f a) (f b) a b
 mapped f = Identity . fmap (runIdentity . f)
 over mapped f = runIdentity . mapped (Identity . f)
               = runIdentity . Identity . fmap (runIdentity . Identity . f)
               - fmap f
-\end{lstlisting}
+\end{minted}
 
 Examples
 
-\begin{lstlisting}[language=haskell]
+\begin{minted}{haskell}
 over mapped (+1) [1,2,3]  ===> [2,3,4]
 over (mapped . mapped) (+1) [[1,2], [3]] ===> [[2,3], [4]]
 chars :: (Char -> Identity Char) -> Text -> Identity Text
 chars f = fmap pack . mapped f . unpack
-\end{lstlisting}
+\end{minted}
 
 Laws for setters
 Functor Laws:

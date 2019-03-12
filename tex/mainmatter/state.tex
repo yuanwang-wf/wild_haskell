@@ -3,16 +3,16 @@
 
 This post aims to cover <em>State</em> course which is skipped in videos.
 
- Basics
+\section{Basics}
 
-First, let's look what is <code>State</code>.
+First, let's look what is State.
 
-<code>
-newtype State s a = State { runState :: s-> (a, s)}
-</code>
+\mint{haskell}|newtype State s a = State { runState :: s-> (a, s)}|
 
-In case you are not familiar with [<code>newtype</code>](https://wiki.haskell.org/Newtype). It is just like `data` but it can only *has exactly one constructor with exactly one field in it.* In this case `State` is the constructor and `runState` is the single field. The type of `State` constructor is `(s ->  a, s)) -> State s a`, since `State` uses record syntax, we have a filed accessor `runState` and its type is State s a -> s -> (a, s).
-<blockquote>A State is a function from a state value <em><strong>s</strong></em> to (a produced value <strong><em>a</em></strong>, and a resulting state <strong><em>s</em></strong>).</blockquote>
+
+In case you are not familiar with \href{https://wiki.haskell.org/Newtype}{newtype}.
+It is just like `data` but it can only *has exactly one constructor with exactly one field in it.* In this case `State` is the constructor and `runState` is the single field. The type of `State` constructor is `(s ->  a, s)) -> State s a`, since `State` uses record syntax, we have a filed accessor `runState` and its type is State s a -> s -> (a, s).
+"A State is a function from a state value" to (a produced value <strong><em>a</em></strong>, and a resulting state <strong><em>s</em></strong>).</blockquote>
 An importance takeaway which might not so oblivious to Haskell beginner is that: `State` is merely a function with type `s -> (a,s)`, (a function wrapped inside constructor `State`, to be exact, and we can unwrap it using `runState`).
 
 Secondly, `State` function takes a `s`representing a state, and produces a tuple contains value `a` and new state `s`.
@@ -25,22 +25,22 @@ It is pretty straightforward, we just need to apply `State` function with `state
 
 A simple solution can be
 
-\begin{lstlisting}[language=haskell]
+\begin{minted}{haskell}
 exec :: State s a -> s -> s
 exec f initial = (\ (_, y) -> y) (runState f initial)
-\end{lstlisting}
+\end{minted}
 
 Since the state value `initial` appears on both sides of `=`, we rewrite it a little more point-free. `runState f` is a partial applied function takes `s` returns `(a,s)`
 
-\begin{lstlisting}[language=haskell]
+\begin{minted}{haskell}
 exec f = (\(_, y) -> y) . runState f
-\end{lstlisting}
+\end{minted}
 
 %In `Prelude`, there is a [`snd`](http://hackage.haskell.org/package/base-4.11.1.0/docs/Prelude.htmlv:snd) function does exactly the same thing of `\(_, y) -> y)`.
 
-\begin{lstlisting}[language=haskell]
+\begin{minted}{haskell}
 exec f = P.snd . runState f
-\end{lstlisting}
+\end{minted}
 
 We could also write `exec`
 
@@ -49,7 +49,7 @@ We could also write `exec`
 
  Basic Usage of State
 
-\begin{lstlisting}[language=haskell]
+\begin{minted}{haskell}
 module Dice where
 
 import Control.Applicative
@@ -92,12 +92,11 @@ rollDice = liftA2 (,) rollDieM rollDieM
 rollNDice :: Int -> State StdGen [Int]
 rollNDice 0 = state (\s -> ([], s))
 rollNDice count = liftA2 (:) rollDieM (rollNDice (count - 1))
-\end{lstlisting}
+\end{minted}
 
 How about draw card from a deck
 
-
-\begin{lstlisting}[language=haskell]
+\begin{minted}{haskell}
 module Deck where
 
 import Control.Applicative
@@ -133,25 +132,24 @@ drawCard = do (generator, deck) <- get
 drawNCard :: Int -> State (StdGen, Deck) [Card]
 drawNCard 0 = state (\s -> ([], s))
 drawNCard count = liftA2 (:) drawCard (drawNCard $ count - 1)
-\end{lstlisting}
+\end{minted}
 
 How about folding a list using `State`
 https://github.com/yuanw/applied-haskell/blob/2018/monad-transformers.mdhow-about-state
 
 
-\begin{lstlisting}[language=haskell]
+\begin{minted}{haskell}
 foldState :: (b -> a -> b) -> b -> [a] -> b
 foldState f accum0 list0 =
     execState (mapM_ go list0) accum0
   where
     go x = modify' (\accum -> f accum x)
-\end{lstlisting}
+\end{minted}
 
 
 Why we cannot compose any two monad
 
-
-\begin{lstlisting}[language=haskell]
+\begin{minted}{haskell}
 import Control.Applicative
 
 newtype Compose f g a = Compose (f (g a))
@@ -166,7 +164,7 @@ instance (Applicative f, Applicative g) => Applicative (Compose f g) where
 
 instance (Monad f, Monad g) => Monad (Compose f g) where
      (Compose fga) >>= m = Compose $ fga >>= \ ga -> let gfgb = ga >>= (return . m) in undefined
-    \end{lstlisting}
+\end{minted}
 
 https://stackoverflow.com/questions/7040844/applicatives-compose-monads-dont
 
@@ -174,11 +172,11 @@ https://stackoverflow.com/questions/7040844/applicatives-compose-monads-dont
  Build a composed monad by hand
 
 
- \begin{lstlisting}[language=haskell]
+\begin{minted}{haskell}
 newtype StateEither s e a = StateEither
     { runStateEither :: s -> (s, Either e a)
     }
-\end{lstlisting}
+\end{minted}
 
 Let's implement the functor instance of this typeP
 
