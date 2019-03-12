@@ -241,6 +241,10 @@ https://ocharles.org.uk/posts/2014-12-14-functional-dependencies.html
 
 http://hackage.haskell.org/package/unliftio
 
+## Using ExceptT
+
+http://hackage.haskell.org/package/mtl-2.2.2/docs/Control-Monad-Except.html#g:3
+
 
 ## References
 1. https://en.wikibooks.org/wiki/Haskell/Understanding_monads/State
