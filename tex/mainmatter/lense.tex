@@ -2,8 +2,142 @@
 \chapter{Learning Lens}
 
 
-Lenses, Folds, and Traversals
-What is a Lens ?
+The content of this chapter comes fron Simon Peyton Jones's \href{https://skillsmatter.com/skillscasts/4251-lenses-compositional-data-access-and-manipulation}{Lenses: Compositional data access and mainpulation} talk.
+
+\section{Native Approach}
+
+\begin{minted}{haskell}
+data Person = Person { name    :: String,
+                     , address :: Address
+                     , salary  :: Int }
+
+data Address = Address { road :: String
+                       , city :: String
+                       , zip  :: String }
+\end{minted}
+
+The goals for lens
+
+* To access and update a given field
+* Compose Lense
+
+\begin{minted}{haskell}
+data LensR s a = LensR { viewR :: s -> a
+                       , setR  :: a -> s -> s }
+\end{minted}
+
+\begin{minted}{haskell}
+data Prisms s a = Prisms { match :: s -> Either s a
+                         , build :: a -> s}
+\end{minted}
+
+Type `s` represent the overall record we try to access or update, Type `a` represent the field we are try to acccess or update.
+
+How to compose `LensR`
+
+\begin{minted}{haskell}
+composeL :: LensR s1 s2 -> LensR s2 a -> LensR s1 a
+composeL (L v1 s1) (L v2 s2)
+    = L (\ s -> v2 (v1 s))
+        (\ a s -> s1 (s2 a (v1 s)) s)
+\end{minted}
+
+The two big problems with this approach is to inefficent, and inflexiable.
+
+\subsection{A step further on this Native Approach}
+
+\begin{minted}{haskell}
+data LensR s a
+    = L { viewR :: s -> a
+        , setR  :: a -> s -> a
+        , mod   :: (a -> a) -> s -> s
+        , modM  :: (a -> Maybe a) -> s -> Maybe s
+        , modIO :: (a -> IO a) -> s -> IO s }
+\end{minted}
+
+The last two (or three if you know your functor well) share lots of commonality.
+
+If we can abstract the common pattern
+
+\begin{minted}{haskell}
+data LensR s a
+    = L { viewR :: s -> a
+        , setR  :: a -> s -> a
+        , mod   :: (a -> a) -> s -> s
+        , modF  :: Functor f => (a -> f a) -> s -> f s }
+\end{minted}
+
+
+
+\begin{minted}{haskell}
+type Lens' s a = forall f. Functor f => (a -> f a) -> s -> f s
+\end{minted}
+
+You may think `Lens'` looks nothing like `LensR`, but they are actually isomorphic.
+
+
+
+Side Bar :: Isomorphic
+
+If `A` and `B` are isomorphic, it means we are getting `B` to `A` without lost any information, and vice verse.
+
+Before proving `Lens'` and `LensR` is isomorphic, allow me introduce two oddly looking functors `Const` and `Identity`.
+
+
+Break Down::
+\begin{minted}{haskell}
+view :: Lens' s a -> s -> a => ((a -> f a) -> s -> f s) -> s -> a
+view ln s = getConst (ln const s)
+\end{minted}
+
+\begin{minted}{haskell}
+let fred = P {_name = "Fred", _salary = 100}
+name :: Lens' Person String
+name fn (P n s) -> (\ n' -> P n' s) <$> fn n
+\end{minted}
+
+\begin{minted}{haskell}
+view name fred
+= (getConst . name . const) fred
+= getConst ((\n' -> P n' s) <$> Const "Fred")
+= getConst . Const "Fred"
+= "Fred"
+\end{minted}
+
+\begin{minted}{haskell}
+set name "John" fred
+= getID $ name (Id . Const  "John") fred
+= getID $ (\ n' -> P n' 100) <$> ((ID. Const  "John" ) fred)
+= getID $ (\ n' -> P n' 100) <$> Id "John"
+= getID $ ID (P "John" 100 )
+= P "John" 100
+\end{minted}
+
+
+Compose Lens'
+
+Function application
+
+\url{https://www.youtube.com/watch?v=sfWzUMViP0M&t=441s}
+
+\url{https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=1&ved=2ahUKEwiS6dD65PfdAhVSJjQIHRzzC9IQFjAAegQIBBAC&url=http%3A%2F%2Fwww.cs.ox.ac.uk%2Fpeople%2Fjeremy.gibbons%2Fpublications%2Fpoptics.pdf&usg=AOvVaw3KgxUg3x37WIToXgmRu79C}
+
+The problem: heterogeneous composite data
+
+Worse: consider access to the A in a composiation data structure
+Maybe (A x B) built using both sums and products.
+
+Sum part comes with Maybe `data Maybe a = Just a | Nothing`
+
+
+\begin{minted}{haskell}
+*Main Lib> import Control.Lens
+*Main Lib Control.Lens> ("hello","world") ^. _2
+"world"
+*Main Lib Control.Lens>
+\end{minted}
+
+\section{What is a Lens ?}
 Lenses address some part of a “structure” that always exists, either look that part, or set that part.
 “structure” can be a computation result, for example, the hour in time. Functional setter and getter.
   Data.Lens
@@ -28,11 +162,11 @@ since set and view in Lens both start with s ->, so we can fuse the two function
 `s -> (a -> s, a)`.
 
 So we could define Lens as
-```haskell
+\begin{minted}{haskell}
 data Lens s a = Lens (s -> (a -> s), a)
 data Store s a = Store (s -> a) s
 data Lens s a = Lens (s -> Store a s)
-```
+\end{minted}
 
 Side bar Store Comonad
 url{https://stackoverflow.com/questions/8428554/what-is-the-comonad-typeclass-in-haskell}
@@ -133,30 +267,30 @@ Functor is a semantic Editor Combinator
 `fmap :: Functor f => SEC (f a) (f b) a b`
 
 first is a also SEC ?
-```haskell
+\begin{minted}{haskell}
 first :: SEC (a, c) (b,c) a b
 first f (a, b) = (f a, b)
-```
+\end{minted}
 Setters
 We can compose Traversable the way as we can compose `(.)` and `fmap`
 
-```haskell
+\begin{minted}{haskell}
 traverse                       :: (Traversable f, Applicative m) => (a -> m b) -> f a -> m (f b)
 traverse . traverse            :: (Traversable f, Traversable g, Applicative m) => (a -> m b) -> f (g a) -> m (f (g b))
 traverse . traverse . traverse :: (Traversable f, Traversable g, Traversable h, Applicative m) => (a -> m b) -> f (g (h a)) -> m (f (g (h b)))
-```
+\end{minted}
 
 traverse is a generalized version of mapM, and work with any kind of Foldable not just List.
 
-```
+\begin{minted}{haskell}
 class (Functor f, Foldable f) => Traversable f where
    traverse :: Applicative m => (a -> m b) -> f a -> m (f b)
-```
+\end{minted}
 
-```haskell
+\begin{minted}{haskell}
 fmapDefault :: forall t a b. Traverable t => (a -> b) -> t a -> t b
 fmapDefault f = runIndentity . traverse (Identity . f)
-```
+\end{minted}
 
 build `fmap` out from traverse
 we can change `fmapDefault`

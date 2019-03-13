@@ -9,8 +9,8 @@ First, let's look what is State.
 
 
 In case you are not familiar with \href{https://wiki.haskell.org/Newtype}{newtype}.
-It is just like `data` but it can only *has exactly one constructor with exactly one field in it.* In this case `State` is the constructor and `runState` is the single field. The type of `State` constructor is `(s ->  a, s)) -> State s a`, since `State` uses record syntax, we have a filed accessor `runState` and its type is State s a -> s -> (a, s).
-"A State is a function from a state value" to (a produced value <strong><em>a</em></strong>, and a resulting state <strong><em>s</em></strong>).</blockquote>
+It is just like \textit{data} but it can only has \textbf{exactly one} constructor with exactly one field in it. In this case \textbf{State} is the constructor and `runState` is the single field. The type of `State` constructor is `(s ->  a, s)) -> State s a`, since `State` uses record syntax, we have a filed accessor `runState` and its type is State s a -> s -> (a, s).
+"A State is a function from a state value" to (a produced value, and a resulting state).</blockquote>
 An importance takeaway which might not so oblivious to Haskell beginner is that: `State` is merely a function with type `s -> (a,s)`, (a function wrapped inside constructor `State`, to be exact, and we can unwrap it using `runState`).
 
 Secondly, `State` function takes a `s`representing a state, and produces a tuple contains value `a` and new state `s`.

@@ -1,5 +1,5 @@
 %%%%
-\chapter{Install Haskell and your first program Guess Number}
+\chapter{Your first Haskell program}
 
 \section{Build Tools}
 \subsection{Stack}
@@ -11,11 +11,7 @@ make sure `stack --version` outputs latest stack version, currently `Version 1.6
 `stack upgrade`
 \todo{Add Nix and Cabal}
 \section{Editor Integration}
-
- VScode with haskell-ide-engine
-
-Haskell Syntax Highlight
-\subsection{Haskell IDE Engine}
+\subsection{VScode with Haskell IDE Engine}
 [haskell-ide-engine](https://github.com/haskell/haskell-ide-engine)
 
 Install on MacOS, you need to install `icu4c` on your machine.
@@ -26,23 +22,16 @@ make
 
 
 
-```bash
+\begin{minted}{bash}
 stack install hoogle
 
 hoogle generate
 stack install
-```
+\end{minted}
 
- Stack
-
-```bash
-stack version
-
-stack upgrade
-```
 
 \section{Your first haskell program}
-
+\subsection{Using stack}
 \verb|stack new guessNumber|
 
 \begin{minted}{haskell}
@@ -53,7 +42,6 @@ import           Data.Ord      (compare)
 import           System.IO     (readLn)
 import           System.Random (randomRIO)
 
-
 guess :: Int -> IO ()
 guess secretNumber = do
     print "guess a number"
@@ -63,10 +51,8 @@ guess secretNumber = do
         EQ -> print "You Win!"
         GT -> (print "Too big!") >> (guess secretNumber)
 
-
 main :: IO ()
 main = do
     secretNumber <- randomRIO (0, 100) :: IO Int
     guess secretNumber
-
 \end{minted}

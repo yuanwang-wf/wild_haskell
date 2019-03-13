@@ -1,0 +1,22 @@
+{
+    "latex-workshop.latex.recipes": [{
+        "name": "pdflatex",
+        "tools": [
+          "pdflatex"
+        ]
+      }],
+    "latex-workshop.latex.tools": [
+        {
+          "name": "pdflatex",
+          "command": "pdflatex",
+          "args": [
+              "-file-line-error",
+              "-synctex=1",
+              "-shell-escape",
+              "-interaction=nonstopmode",
+              "%DOC%"
+          ],
+          "env": {}
+        }
+    ]
+}
