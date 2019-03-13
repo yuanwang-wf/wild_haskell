@@ -13,6 +13,14 @@
 \usepackage{xcolor}
 \usepackage{booktabs}
 \usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+}
+ 
+\urlstyle{same}
 
 % Haskell code snippets and useful shortcuts
 \usepackage[cache=false]{minted}
@@ -35,6 +43,8 @@
 
 \mainmatter
 \include{mainmatter/chap1}
+\include{mainmatter/monad}
+\include{mainmatter/applicative}
 \include{mainmatter/state}
 \include{mainmatter/lense}
 \end{document}

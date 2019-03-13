@@ -191,58 +191,71 @@ f . g = \ t -> f (g t)
 \end{minted}
 
 
-`((.).(.)) (+1) (+) 10 10 = 21`
+\begin{align*}
+& ((.).(.)) (+1) (+) 10 10 = 21 \\
+&  ((.).(.)) (+1) (+) 10 10 \\
+& =  (.)((.) (+1)) (+) 10 10 \\
+& =  ((.) (+1)) (+ 10) 10   \\
+& = ((+1). (+10)) 10 \\
+& = (+1) ((+10) 10) \\
+& = (+1) (10 + 10) \\
+& = 21
+\end{align*}
+
+\begin{minted}{haskell}
+(.).(.) :: (b -> c) -> (a -> b) -> a -> c
+dotF . dotG :: (b -> c) -> (a -> c) -> a -> c
+dotF :: b -> c
+dotG :: a -> b
+\end{minted}
+
+since \textbf{dotF} is just an alias to  \textbf{(.)}
 \begin{equation}
-   ((.).(.)) (+1) (+) 10 10
-=  (.)((.) (+1)) (+) 10 10
-=  ((.) (+1)) (+ 10) 10
-= ((+1). (+10)) 10
-= (+1) ((+10) 10)
-= (+1) (10 + 10)
-= 21
+dotF :: (u -> v) -> (s -> u) -> s -> v
+(u -> v) -> (s -> u) -> s -> v === b -> c
+\end{equation}
+therefore
+
+\begin{equation}
+b === (u -> v) \\
+c === (s -> u) -> s -> v
 \end{equation}
 
-
-`(.).(.) :: (b -> c) -> (a -> b) -> a -> c`
-`dotF . dotG :: (b -> c) -> (a -> c) -> a -> c`
-`dotF :: b -> c`
-`dotG :: a -> b`
-
-since `dotF` is just an alias to `(.)`
-`dotF :: (u -> v) -> (s -> u) -> s -> v`
-`(u -> v) -> (s -> u) -> s -> v === b -> c`
-therefore
-`b === (u -> v)`
-`c === (s -> u) -> s -> v`
-
 `dotG` is also an alias to `(.)`
-`dotG :: (y -> z) -> (x -> y) -> x -> z`
-`(y -> z) -> (x -> y) -> x -> z === a -> b`
+
+\begin{equation}
+dotG :: (y -> z) -> (x -> y) -> x -> z
+(y -> z) -> (x -> y) -> x -> z === a -> b
+\end{equation}
 therefore
-`a === (y -> z)`
-`b === (x -> y) -> x -> z`
 
-since `b` appears on both side
+\begin{equation}
+a === (y -> z)
+b === (x -> y) -> x -> z
+\end{equation}
 
-```
+since \textbf{b} appears on both side
+
+\begin{equation}
 a === y -> z
 b === (u -> v)
 b === (x -> y) -> x -> z
 c === (s -> u) -> s -> v
-```
+\end{equation}
 
 we can deduct
 
-```
-u === x -> y
-v === x -> z
-```
+\begin{align*}
+u &=== x -> y  \\
+v &=== x -> z
+\end{align*}
 
-therefore `c === (s -> x -> y) -> s -> x -> z`
+therefore \begin{equation}c === (s -> x -> y) -> s -> x -> z\end{equation}
 
-`(.).(.) === a -> c`
-`(.).(.) === (y -> z) -> (s -> x -> y) -> s -> x - z`
-
+\begin{align*}
+(.).(.) & === a -> c \\
+(.).(.) & === (y -> z) -> (s -> x -> y) -> s -> x - z
+\end{align*}
 
 
 we can generalize this to any functor
