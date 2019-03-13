@@ -1,9 +1,14 @@
 module Main where
 
-import Exercise2
+import Control.Monad.Reader
+import Control.Monad.Trans.State
+import AppT
+import System.Random
 
 main :: IO ()
-main = main'
+main = do
+    seed <- randomRIO (1, 1000)
+    flip runReaderT seed $ unAppT run'
 
 -- import Control.Monad.Except
 
