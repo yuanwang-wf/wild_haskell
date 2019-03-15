@@ -6,7 +6,7 @@ The content of this chapter comes fron Simon Peyton Jones's \href{https://skills
 
 \section{Motivation}
 
-The record problem often represented as the hello world for Lens. 
+The record problem often represented as the hello world for Lens.
 
 The problem: heterogeneous composite data
 
@@ -180,7 +180,7 @@ data Lens s a = Lens (s -> Store a s)
 \end{minted}
 
 
-Semantic Editor Combinator
+\subsection{Semantic Editor Combinator}
 
 The Power is in the dot
 \vspace{1mm}
@@ -191,6 +191,8 @@ The Power is in the dot
 \end{minted}
 \vspace{1mm}
 
+
+\begin{WrapText}
 \href{https://www.reddit.com/r/haskellquestions/comments/ayi445/help_me_understand_the_function_and_its_type}{Detail Explantation}
 
 \begin{minted}{haskell}
@@ -264,7 +266,7 @@ therefore \begin{equation}c === (s -> x -> y) -> s -> x -> z\end{equation}
 (.).(.) & === a -> c \\
 (.).(.) & === (y -> z) -> (s -> x -> y) -> s -> x - z
 \end{align*}
-
+\end{WrapText}
 
 we can generalize this to any functor
 
@@ -287,24 +289,29 @@ It may seems counterintuitive at first, we lost the relation between a and s, b 
 Functor is a semantic Editor Combinator
 map :: Functor f => SEC (f a) (f b) a b
 
-first is a also SEC ?
+first is a also SEC, fmap is a SEC
+
 \begin{minted}{haskell}
 first :: SEC (a, c) (b,c) a b
 first f (a, b) = (f a, b)
 \end{minted}
-Setters
+
+
+\subsection{Setters}
 We can compose Traversable the way as we can compose `(.)` and `fmap`
 
 \begin{minted}{haskell}
-traverse                       :: (Traversable f, Applicative m) 
+traverse                       :: (Traversable f, Applicative m)
     => (a -> m b) -> f a -> m (f b)
-traverse . traverse            :: (Traversable f, Traversable g, Applicative m) 
+traverse . traverse            :: (Traversable f, Traversable g, Applicative m)
     => (a -> m b) -> f (g a) -> m (f (g b))
-traverse . traverse . traverse :: (Traversable f, Traversable g, Traversable h, Applicative m) 
+traverse . traverse . traverse :: (Traversable f, Traversable g, Traversable h, Applicative m)
     => (a -> m b) -> f (g (h a)) -> m (f (g (h b)))
 \end{minted}
 
-traverse is a generalized version of mapM, and work with any kind of Foldable not just List.
+traverse is a generalized version of mapM, and work with any kind of Traversable not just List.
+
+Mixing `traverse` and `fmap` might lead to odd behavior /todo{find a case}
 
 \begin{minted}{haskell}
 class (Functor f, Foldable f) => Traversable f where
