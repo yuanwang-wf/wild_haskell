@@ -4,7 +4,16 @@
 
 The content of this chapter comes fron Simon Peyton Jones's \href{https://skillsmatter.com/skillscasts/4251-lenses-compositional-data-access-and-manipulation}{Lenses: Compositional data access and mainpulation} talk.
 
-\section{Native Approach}
+\section{Motivation}
+
+The record problem often represented as the hello world for Lens. 
+
+The problem: heterogeneous composite data
+
+Worse: consider access to the A in a composition data structure
+Maybe (A x B) built using both sums and products.
+
+Sum part comes with Maybe `data Maybe a = Just a | Nothing`
 
 \begin{minted}{haskell}
 data Person = Person { name    :: String,
@@ -16,33 +25,33 @@ data Address = Address { road :: String
                        , zip  :: String }
 \end{minted}
 
-The goals for lens
 
-* To access and update a given field
-* Compose Lense
+The goals for lens
+\begin{itemize}
+\item To access and update a given field
+\item Compose Lense
+\end{itemize}
+
+\section{Native Approach}
+
 
 \begin{minted}{haskell}
 data LensR s a = LensR { viewR :: s -> a
-                       , setR  :: a -> s -> s }
+                            , setR   :: a -> s -> s }
 \end{minted}
 
-\begin{minted}{haskell}
-data Prisms s a = Prisms { match :: s -> Either s a
-                         , build :: a -> s}
-\end{minted}
+Type \textbf{s} represent the overall record we try to access or update, Type \textbf{a} represent the field we are try to access or update.
 
-Type `s` represent the overall record we try to access or update, Type `a` represent the field we are try to acccess or update.
-
-How to compose `LensR`
+How to compose \textbf{LensR}
 
 \begin{minted}{haskell}
 composeL :: LensR s1 s2 -> LensR s2 a -> LensR s1 a
-composeL (L v1 s1) (L v2 s2)
-    = L (\ s -> v2 (v1 s))
+composeL (LensR v1 s1) (LensR v2 s2)
+    = LensR (\ s -> v2 (v1 s))
         (\ a s -> s1 (s2 a (v1 s)) s)
 \end{minted}
 
-The two big problems with this approach is to inefficent, and inflexiable.
+The two big problems with this approach is to inefficient, and inflexible.
 
 \subsection{A step further on this Native Approach}
 
@@ -76,10 +85,10 @@ type Lens' s a = forall f. Functor f => (a -> f a) -> s -> f s
 You may think `Lens'` looks nothing like `LensR`, but they are actually isomorphic.
 
 
-
-Side Bar :: Isomorphic
-
+\begin{WrapText}
+ Isomorphic
 If `A` and `B` are isomorphic, it means we are getting `B` to `A` without lost any information, and vice verse.
+\end{WrapText}
 
 Before proving `Lens'` and `LensR` is isomorphic, allow me introduce two oddly looking functors `Const` and `Identity`.
 
@@ -122,12 +131,14 @@ Function application
 
 \url{https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=1&ved=2ahUKEwiS6dD65PfdAhVSJjQIHRzzC9IQFjAAegQIBBAC&url=http%3A%2F%2Fwww.cs.ox.ac.uk%2Fpeople%2Fjeremy.gibbons%2Fpublications%2Fpoptics.pdf&usg=AOvVaw3KgxUg3x37WIToXgmRu79C}
 
-The problem: heterogeneous composite data
 
-Worse: consider access to the A in a composiation data structure
-Maybe (A x B) built using both sums and products.
 
-Sum part comes with Maybe `data Maybe a = Just a | Nothing`
+
+\begin{minted}{haskell}
+data Prisms s a = Prisms { match :: s -> Either s a
+                         , build :: a -> s}
+\end{minted}
+
 
 
 \begin{minted}{haskell}
@@ -168,20 +179,17 @@ data Store s a = Store (s -> a) s
 data Lens s a = Lens (s -> Store a s)
 \end{minted}
 
-Side bar Store Comonad
-url{https://stackoverflow.com/questions/8428554/what-is-the-comonad-typeclass-in-haskell}
-hurl{ttps://stackoverflow.com/questions/8766246/what-is-the-store-comonad}
 
-Lens can form a category
-
- Semantic Editor Combinator
+Semantic Editor Combinator
 
 The Power is in the dot
+\vspace{1mm}
 \begin{minted}{haskell}
 (.)         :: (b -> c) -> (a -> c) -> (a -> c)
 (.).(.)     :: (b -> c) -> (a1 -> a2 -> b) -> a1 -> a2 -> c
 (.).(.).(.) :: (b -> c) -> (a1 -> a2 -> a3 -> b) -> a1 -> a2 -> a3 -> c
 \end{minted}
+\vspace{1mm}
 
 \href{https://www.reddit.com/r/haskellquestions/comments/ayi445/help_me_understand_the_function_and_its_type}{Detail Explantation}
 
@@ -271,13 +279,13 @@ Semantic Editor Combinator
 
 `type SEC s t a b = (a -> b) -> s -> t`
 it like a functor (a -> b) -> f a -> f b
-`fmap` is Semantic Editor Combinator
+fmap is Semantic Editor Combinator
 `fmap . fmap` is also a SEC
 
 so we use `s` to generalize `f a`,  `f (g a)`, `f (g (h a))` and `t` to generalize `f b`,  `f (g b)`, `f (g (h b))`.
 It may seems counterintuitive at first, we lost the relation between a and s, b and t.
 Functor is a semantic Editor Combinator
-`fmap :: Functor f => SEC (f a) (f b) a b`
+map :: Functor f => SEC (f a) (f b) a b
 
 first is a also SEC ?
 \begin{minted}{haskell}
@@ -288,9 +296,12 @@ Setters
 We can compose Traversable the way as we can compose `(.)` and `fmap`
 
 \begin{minted}{haskell}
-traverse                       :: (Traversable f, Applicative m) => (a -> m b) -> f a -> m (f b)
-traverse . traverse            :: (Traversable f, Traversable g, Applicative m) => (a -> m b) -> f (g a) -> m (f (g b))
-traverse . traverse . traverse :: (Traversable f, Traversable g, Traversable h, Applicative m) => (a -> m b) -> f (g (h a)) -> m (f (g (h b)))
+traverse                       :: (Traversable f, Applicative m) 
+    => (a -> m b) -> f a -> m (f b)
+traverse . traverse            :: (Traversable f, Traversable g, Applicative m) 
+    => (a -> m b) -> f (g a) -> m (f (g b))
+traverse . traverse . traverse :: (Traversable f, Traversable g, Traversable h, Applicative m) 
+    => (a -> m b) -> f (g (h a)) -> m (f (g (h b)))
 \end{minted}
 
 traverse is a generalized version of mapM, and work with any kind of Foldable not just List.
@@ -315,11 +326,13 @@ over traverse f = runIdentity . traverse (Identity . f)
                 = fmap f
 \end{minted}
 
-type of `over :: ((a -> Identity b) -> s -> Identity t) -> (a -> b) -> s -> t`
+
+\hs{over}~\hs{::}~\hs{((a -> Identity b) -> s -> Identity t)}~\hs{->} (a \hs{->} b) \hs{->} s \hs{->} t
 type Setter s t a b = (a -> Identity b) -> s -> Identity t
-so we could rewrite `over` as
-over :: Setter s t a b -> (a -> b) -> s -> t
-let’s apply setter
+so we could rewrite \hs{over} as
+\hs{over}~\hs{::}~\hs{Setter s t a b} \hs{->} (a \hs{->} b) \hs{->} s \hs{->} t
+
+Let’s apply setter
 
 \begin{minted}{haskell}
 mapped :: Functor f => Setter (f a) (f b) a b
@@ -470,14 +483,16 @@ updateSegment = (segmentStart .~ makePoint (10, 10)) . (segmentEnd .~ makePoint 
 
 
 
- References
-\href{https://skillsmatter.com/skillscasts/4251-lenses-compositional-data-access-and-manipulation}{SPJ Lenses: compositional data access and manipulation}
-\href{https://www.youtube.com/watch?v=cefnmjtAolY}{Edward Kmett's NYC Haskell Meetup talk}
-\href(http://comonad.com/haskell/Lenses-Folds-and-Traversals-NYC.pdf){Edward Kmett's NYC Haskell Meetup talk slide}
-\url{http://hackage.haskell.org/package/lens-tutorial-1.0.3/docs/Control-Lens-Tutorial.html}
-\url{https://www.youtube.com/watch?v=H01dw-BMmlE}
-\url{https://www.youtube.com/watch?v=QZy4Yml3LTY}
-\url{https://www.youtube.com/watch?v=T88TDS7L5DY}
-\url{http://lens.github.io/tutorial.html}
-\url{https://www.reddit.com/r/haskell/comments/9ded97/is_learning_how_to_use_the_lens_library_worth_it/e5hf9ai/}
-\url{https://blog.jle.im/entry/lenses-products-prisms-sums.html}
+References
+\begin{itemize}
+ \item \href{https://skillsmatter.com/skillscasts/4251-lenses-compositional-data-access-and-manipulation}{SPJ Lenses: compositional data access and manipulation}
+ \item \href{https://www.youtube.com/watch?v=cefnmjtAolY}{Edward Kmett's NYC Haskell Meetup talk}
+ \item \href(http://comonad.com/haskell/Lenses-Folds-and-Traversals-NYC.pdf){Edward Kmett's NYC Haskell Meetup talk slide}
+ \item \url{http://hackage.haskell.org/package/lens-tutorial-1.0.3/docs/Control-Lens-Tutorial.html}
+ \item \url{https://www.youtube.com/watch?v=H01dw-BMmlE}
+ \item \url{https://www.youtube.com/watch?v=QZy4Yml3LTY}
+ \item \url{https://www.youtube.com/watch?v=T88TDS7L5DY}
+ \item \url{http://lens.github.io/tutorial.html}
+ \item \url{https://www.reddit.com/r/haskell/comments/9ded97/is_learning_how_to_use_the_lens_library_worth_it/e5hf9ai/}
+ \item \url{https://blog.jle.im/entry/lenses-products-prisms-sums.html}
+\end{itemize}

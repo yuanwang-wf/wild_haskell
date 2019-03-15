@@ -6,7 +6,6 @@
 \usepackage{fontenc}
 \usepackage{mathptmx}
 \usepackage{amsmath, amssymb, amsfonts}
-\usepackage{graphicx}
 \usepackage{setspace}
 \usepackage{fancyhdr}\pagestyle{fancy}
 \usepackage{todonotes}
@@ -24,7 +23,18 @@
 
 % Haskell code snippets and useful shortcuts
 \usepackage[cache=false]{minted}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage[framemethod=tikz]{mdframed}
+
+
+
 \setminted[haskell]{escapeinside=@@}
+
+\newenvironment{WrapText}[1][r]
+  {\wrapfigure{#1}{0.5\textwidth}\mdframed[backgroundcolor=gray!20,skipabove=0pt,skipbelow=0pt]}
+  {\endmdframed\endwrapfigure}
+
 \newcommand{\hs}{\mintinline{haskell}}
 \newcommand{\cmd}[1]{\textsf{\color[rgb]{0,0,0.5} #1}}
 \newcommand{\teq}{\smaller $\sim$}
@@ -34,6 +44,7 @@
 \newcommand{\std}[1]{{\color[rgb]{0,0.3,0} #1}}
 \newcommand{\blk}[1]{{\color[rgb]{0,0,0} #1}}
 \newcommand{\blu}[1]{{\color[rgb]{0,0,1.0} #1}}
+
 
 \begin{document}
 \listoftodos
