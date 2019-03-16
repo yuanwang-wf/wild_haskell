@@ -276,7 +276,7 @@ fmap . fmap         :: ( Functor f, Functor g)   => (a -> b) -> f (g a) -> f (g 
 fmap . fmap . fmap  :: (Functor f, Functor g, Functor h) => (a -> b) -> f (g (h a)) -> f (g (h b))
 \end{minted}
 
-it means we compose a function under arbitrary level deep nested context
+it means we compose a function under arbitrary depth Functor
 Semantic Editor Combinator
 
 `type SEC s t a b = (a -> b) -> s -> t`
@@ -285,7 +285,7 @@ fmap is Semantic Editor Combinator
 `fmap . fmap` is also a SEC
 
 so we use `s` to generalize `f a`,  `f (g a)`, `f (g (h a))` and `t` to generalize `f b`,  `f (g b)`, `f (g (h b))`.
-It may seems counterintuitive at first, we lost the relation between a and s, b and t.
+It may seems counterintuitive at first, we lost the relation between a and s, b and t. But it allows us to have an unified type represents them.
 Functor is a semantic Editor Combinator
 map :: Functor f => SEC (f a) (f b) a b
 
