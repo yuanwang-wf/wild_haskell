@@ -1,0 +1,5 @@
+\chapter{Acid State}
+
+\begin{itemize}
+    \item \href{http://happstack.com/docs/crashcourse/AcidState.html}{Happstack Acid State}
+\end{itemize}
